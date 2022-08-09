@@ -43,7 +43,6 @@ import numpy as np
 from numpy.lib import math
 from sklearn.linear_model import LinearRegression, SGDRegressor
 from statsmodels.regression import linear_model
-import time
 import copy
 import os
 import cv2,time
@@ -299,6 +298,7 @@ def FedAvg(cl_id, client_port):
                     send_flag = True
                 except Exception as e:
                     print('Error during sending weight to server: {}'.format(e))
+                    time.sleep(1)
 
     
 if __name__ == '__main__':

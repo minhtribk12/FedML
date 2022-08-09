@@ -42,7 +42,6 @@ import numpy as np
 from numpy.lib import math
 from sklearn.linear_model import LinearRegression, SGDRegressor
 from statsmodels.regression import linear_model
-import time
 import copy
 import os
 import cv2,time
@@ -273,6 +272,7 @@ def FedAvg():
                         send('./global_weight/','weight_U0_'+str(comm_round)+'_'+str(tr)+'.txt',CLIENT_IP[id], CLIENT_PORT[id])
                 except Exception as e:
                     print('Error during sending weight to client: {}'.format(e))
+                    time.sleep(1)
                 
             global_acc, global_loss = test_model(X_t, y_t, global_model)
 
