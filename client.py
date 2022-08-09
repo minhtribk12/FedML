@@ -306,5 +306,5 @@ if __name__ == '__main__':
     parser.add_argument('--cl', help='Client ID', default=0)
     parser.add_argument('--port', help='Client reveiving port', default=4455)
     args = parser.parse_args()
-    FedAvg(args.cl, args.port)
+    FedAvg(args.cl, int(args.port))
     sys.exit(main())  
