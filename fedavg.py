@@ -79,7 +79,7 @@ from torch import nn
 from tensorflow.keras import backend
 from tensorflow.keras.optimizers import SGD
 
-comms_round=2
+comms_round=5
 client_names=['1']
 
 
