@@ -9,13 +9,13 @@ import tensorflow as tf
 from sklearn.utils import shuffle 
 from communicate import send, server_receive, open_socket,load_weight_from_file,write_weight_to_file
 
-SERVER_IP = '10.100.7.1'
+SERVER_IP = '127.0.0.1'
 SERVER_PORT = 4477
 
 comms_round=2
 client_names=['1','2']
 
-CLIENT_IP = ['10.100.7.1', '10.100.7.1']
+CLIENT_IP = ['127.0.0.1', '127.0.0.1']
 CLIENT_PORT = [4455,4466]
 
 #Enable all GPUs
@@ -46,7 +46,6 @@ def build_global_model(avg,get_model):
 def broadcast_file(file_path, file_name):
     send_flag = False
     while send_flag == False:
-        print('sending file to client')
         tolerance = 3
         for i in range(len(client_names)):
             flag_i = False
@@ -97,9 +96,7 @@ def FedAvg():
                 # After get weight from clients
                 #####################################################
                 # TO DO: Implement communication
-                print("receiving weight")
                 server_receive('./server_folder/local_weight/', recv_socket, len(client_names))
-                print('receiving all weight')
 
                 #For each client
                 for client in client_names:
@@ -108,17 +105,17 @@ def FedAvg():
                     s_weights.append(client_model_w)
                 average_weights = np.mean(s_weights, axis=0)
                 global_model.set_weights(average_weights)
-            print('write weight to file')
             write_weight_to_file('./server_folder/global_weight/',global_model,0,comm_round,tr)
-            print('write success')
 
             #####################################################
             # Communicate to send new weights to clients
             # Send weight back to client
             #####################################################
             # TO DO: Implement communication
-            broadcast_file('./server_folder/global_weight/','weight_U0_'+str(comm_round)+'_'+str(tr)+'.h5')
-                
+
+            if comm_round < comms_round:
+                broadcast_file('./server_folder/global_weight/','weight_U0_'+str(comm_round)+'_'+str(tr)+'.h5')    
+
             global_acc, global_loss = test_model(X_t, y_t, global_model)
             acc_arr.append(global_acc)
             loss_arr.append(global_loss)

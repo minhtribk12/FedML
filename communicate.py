@@ -24,19 +24,14 @@ def send(file_path, file_name, ip, port):
 
         """ Sending the filename to the server. """
         client.send(file_name.encode(FORMAT))
-        print('sent file name success')
-        print(file_path+file_name)
         msg = client.recv(SIZE).decode(FORMAT)
-        print('receive response for file name success')
         print(f"[SERVER]: {msg}")
 
         """ Sending the file data to the server. """
 
         client.send(data)
         # client.send(data.encode(FORMAT))
-        print('sent file data success')
         msg = client.recv(SIZE).decode(FORMAT)
-        print('receive response for file data success')
         print(f"[SERVER]: {msg}")
 
         """ Closing the file. """
@@ -46,7 +41,6 @@ def send(file_path, file_name, ip, port):
         client.close()
         return True
     except Exception as e:
-        print(file_path+file_name)
         print('Error during sending weight to client: {}'.format(e))
         time.sleep(1)
         return False
@@ -78,7 +72,6 @@ def client_receive(file_path, recv_socket, file_name):
         """ Receiving the filename from the client. """
         filename = conn.recv(SIZE).decode(FORMAT)
         print(f"[RECV] Receiving the filename.")
-        print(filename)
         file = open(file_path + filename, "wb")
         conn.send("Filename received.".encode(FORMAT))
 
@@ -96,7 +89,6 @@ def client_receive(file_path, recv_socket, file_name):
         conn.close()
         print(f"[DISCONNECTED] {addr} disconnected.")
         if file_name == filename:
-            print('receive file success')
             receive_flag = True
 
 def server_receive(file_path, recv_socket, num_client):
@@ -140,7 +132,6 @@ def load_weight_from_file(file_path, model, cl_id,comm_r,tr):
     return model
 
 def select_sub(id):
-    print(id)
     df_user = pd.read_csv('../data/dataset/Mixed_U'+str(id)+'_X.csv', keep_default_na=False)
     df_user_y = pd.read_csv('../data/dataset/Mixed_U'+str(id)+'_y.csv', keep_default_na=False)
     return df_user,df_user_y

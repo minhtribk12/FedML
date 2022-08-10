@@ -11,8 +11,8 @@ from communicate import send, client_receive, open_socket,load_weight_from_file,
 comms_round=2
 client_names=['1']
 
-SERVER_IP = '10.100.7.1'
-CLIENT_IP = '10.100.7.1'
+SERVER_IP = '127.0.0.1'
+CLIENT_IP = '127.0.0.1'
 SERVER_PORT = 4477
 
 #Enable all GPUs
@@ -30,7 +30,6 @@ def retrain_model(c_id,model):
     X0,y0=select_sub(c_id)
     
     y0 = to_categorical(y0)
-    # print(y0.shape)
 
     n_cols = X0.shape[1]
     model.compile(
@@ -40,7 +39,6 @@ def retrain_model(c_id,model):
     )
     
     history = model.fit(X0,y0,epochs=40, shuffle=True ,verbose=False)
-    print(history.history.keys())
     with open('./acc_loss/history.txt', 'w') as f:
         for item in history.history['accuracy']:
             f.write("%s\n" % item)
@@ -71,7 +69,7 @@ def FedAvg(cl_id, client_port):
             if global_model != None:
                 file_name = 'weight_U0_'+str(comm_round)+'_'+str(tr)+'.h5'
                 client_receive('./client_'+str(cl_id)+'_folder/global_weight/', recv_socket, file_name)
-                print(global_model.summary())
+
                 #####################################################
                 # Communicate to receive new global weights from server
                 # After get global weight from server
@@ -79,7 +77,7 @@ def FedAvg(cl_id, client_port):
                 # TO DO: Implement communication
 
                 global_model = load_weight_from_file('./client_'+str(cl_id)+'_folder/global_weight/', global_model,0,comm_round,tr)
-                print("retraining model")
+                print("Re-training model")
                 local_model = retrain_model(cl_id,global_model)
                 write_weight_to_file('client_'+str(cl_id)+'_folder/local_weight/',local_model,cl_id,comm_round,tr)
 

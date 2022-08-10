@@ -97,7 +97,6 @@ def test_model(X_t, y_t, global_model):
 
 
 def select_sub(id):
-    print(id)
     df_user = pd.read_csv('../data/dataset/Mixed_U'+str(id)+'_X.csv', keep_default_na=False)
     df_user_y = pd.read_csv('../data/dataset/Mixed_U'+str(id)+'_y.csv', keep_default_na=False)
 
@@ -227,9 +226,7 @@ def get_weights(c_id,g_w,comm_r,tr):
     
 
     # y_val = to_categorical(y_val)
-    # print(y0.shape)
     y0 = to_categorical(y0)
-    # print(y0.shape)
 
     n_cols = X0.shape[1]
     from tensorflow.keras.layers import BatchNormalization
@@ -237,7 +234,6 @@ def get_weights(c_id,g_w,comm_r,tr):
     
     model.add(Dense(30, input_dim=n_cols, activation='relu'))
     model.add(Dense(12,activation='softmax'))
-    # print(model.summary())
     lr = 0.01
     optimizer = SGD(lr=lr, 
     decay=lr / comms_round, 
@@ -292,7 +288,6 @@ def FedAvg():
         loss_arr=[]
         global_model=build_global_model(0,True)
         score=global_model.evaluate(X_t,y_t)
-        print(score)
         for comm_round in range(comms_round):
         
             global_weights = global_model.get_weights()
@@ -300,17 +295,12 @@ def FedAvg():
             #get weights 
             s_weights = list()
 
-            
-            # print(client_names)
             #For each client
             for client in client_names:
      
-                # print(client)
                 client_model_w=get_weights(client,global_weights,comm_round,tr)
-                # print(type(client_model_w))
                 s_weights.append(client_model_w)
             average_weights = np.mean(s_weights, axis=0)
-            # print(type(global_model))
             global_model.set_weights(average_weights)
 
                 
