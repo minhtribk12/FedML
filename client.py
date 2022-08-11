@@ -14,6 +14,7 @@ client_names=['1']
 SERVER_IP = '127.0.0.1'
 CLIENT_IP = '127.0.0.1'
 SERVER_PORT = 4477
+CLIENT_PORT = 4455
 
 #Enable all GPUs
 
@@ -51,7 +52,7 @@ def load_model_from_json(file_path):
     return model_from_json(loaded_model_json)
 
     
-def FedAvg(cl_id, client_port):
+def FedAvg(cl_id, client_ip=CLIENT_IP, client_port=CLIENT_PORT, server_ip=SERVER_IP, server_port=SERVER_PORT):
     # Training data
     X_t=pd.read_csv('../data/dataset/Mixed_Eval_X.csv')
     y_t=pd.read_csv('../data/dataset/Mixed_eval_y.csv', keep_default_na=False)
@@ -100,6 +101,9 @@ def FedAvg(cl_id, client_port):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Client Training")
     parser.add_argument('--cl', help='Client ID', default=0)
-    parser.add_argument('--port', help='Client reveiving port', default=4455)
+    parser.add_argument('--ci', help='Client ip', default='127.0.0.1')
+    parser.add_argument('--si', help='Server ip', default='127.0.0.1')
+    parser.add_argument('--cp', help='Client reveiving port', default=4455)
+    parser.add_argument('--sp', help='Server reveiving port', default=4477)
     args = parser.parse_args()
-    FedAvg(args.cl, int(args.port)) 
+    FedAvg(args.cl, str(args.ci), int(args.cp), str(args.si), int(args.sp)) 

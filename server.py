@@ -1,7 +1,7 @@
 import pandas as pd
 import tensorflow as tf
 import numpy as np
-import time
+import time, json, argparse
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.utils import to_categorical
@@ -13,7 +13,7 @@ SERVER_IP = '127.0.0.1'
 SERVER_PORT = 4477
 
 comms_round=2
-client_names=['1','2']
+CLIENT_NAMES=['1','2']
 
 CLIENT_IP = ['127.0.0.1', '127.0.0.1']
 CLIENT_PORT = [4455,4466]
@@ -43,7 +43,7 @@ def build_global_model(avg,get_model):
   
 
 
-def broadcast_file(file_path, file_name):
+def broadcast_file(file_path, file_name, client_ips, client_ports, client_names):
     send_flag = False
     while send_flag == False:
         tolerance = 3
@@ -51,7 +51,7 @@ def broadcast_file(file_path, file_name):
             flag_i = False
             tol_count = 0
             while flag_i == False:
-                flag_i = send(file_path, file_name,CLIENT_IP[i], CLIENT_PORT[i])
+                flag_i = send(file_path, file_name,client_ips[i], client_ports[i])
                 flag_i = True
                 if flag_i == False:
                     print('Error during sending file to client {}'.format(i))
@@ -61,14 +61,14 @@ def broadcast_file(file_path, file_name):
                         break
         send_flag = True
    
-def FedAvg():
+def FedAvg(server_ip=SERVER_IP, server_port=SERVER_PORT, client_ips=CLIENT_IP, client_ports=CLIENT_PORT, client_names= CLIENT_NAMES):
 
     # Training data
     X_t=pd.read_csv('../data/dataset/Mixed_Eval_X.csv')
     y_t=pd.read_csv('../data/dataset/Mixed_eval_y.csv', keep_default_na=False)
     X_t, y_t = shuffle(X_t, y_t, random_state=10)
     y_t = to_categorical(y_t)
-    recv_socket = open_socket(SERVER_IP, SERVER_PORT)
+    recv_socket = open_socket(server_ip, server_port)
 
     acc_arr=[]
     loss_arr=[]
@@ -79,7 +79,7 @@ def FedAvg():
     model_json = global_model.to_json()
     with open("./server_model/global_model.json", "w") as json_file:
         json_file.write(model_json)
-    broadcast_file('./server_model/','global_model.json')
+    broadcast_file('./server_model/','global_model.json', client_ips, client_ports, client_names)
 
     for tr in range(2):
 
@@ -114,7 +114,7 @@ def FedAvg():
             # TO DO: Implement communication
 
             if comm_round < comms_round:
-                broadcast_file('./server_folder/global_weight/','weight_U0_'+str(comm_round)+'_'+str(tr)+'.h5')    
+                broadcast_file('./server_folder/global_weight/','weight_U0_'+str(comm_round)+'_'+str(tr)+'.h5', client_ips, client_ports, client_names)    
 
             global_acc, global_loss = test_model(X_t, y_t, global_model)
             acc_arr.append(global_acc)
@@ -132,4 +132,8 @@ def FedAvg():
             f.close()
     
 if __name__ == '__main__':
-    FedAvg() 
+    parser = argparse.ArgumentParser(description="Federated Learning Server")
+    parser.add_argument('--sc', help='Server Configuration File', default='./server_conf.json')
+    args = parser.parse_args()
+    server_config = json.load(open(args.sc))
+    FedAvg(server_config['server']['ip'], server_config['server']['port'], server_config['client']['ip'], server_config['client']['port'],server_config['client']['name']) 
