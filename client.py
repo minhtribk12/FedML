@@ -59,7 +59,7 @@ def FedAvg(cl_id, client_ip=CLIENT_IP, client_port=CLIENT_PORT, server_ip=SERVER
     X_t, y_t = shuffle(X_t, y_t, random_state=10)
     y_t = to_categorical(y_t)
 
-    recv_socket = open_socket(CLIENT_IP, client_port)
+    recv_socket = open_socket(client_ip, client_port)
     global_model = None
     client_receive('./client_'+str(cl_id)+'_model/', recv_socket, 'global_model.json')
     global_model = load_model_from_json('./client_'+str(cl_id)+'_model/global_model.json')
@@ -91,7 +91,7 @@ def FedAvg(cl_id, client_ip=CLIENT_IP, client_port=CLIENT_PORT, server_ip=SERVER
                 send_flag = False
                 while send_flag == False:
                     try:
-                        send('./client_'+str(cl_id)+'_folder/local_weight/', 'weight_U'+str(cl_id)+'_'+str(comm_round)+'_'+str(tr)+'.h5',SERVER_IP, SERVER_PORT)
+                        send('./client_'+str(cl_id)+'_folder/local_weight/', 'weight_U'+str(cl_id)+'_'+str(comm_round)+'_'+str(tr)+'.h5',server_ip, server_port)
                         send_flag = True
                     except Exception as e:
                         print('Error during sending weight to server: {}'.format(e))
@@ -104,6 +104,6 @@ if __name__ == '__main__':
     parser.add_argument('--ci', help='Client ip', default='127.0.0.1')
     parser.add_argument('--si', help='Server ip', default='127.0.0.1')
     parser.add_argument('--cp', help='Client reveiving port', default=4455)
-    parser.add_argument('--sp', help='Server reveiving port', default=4477)
+    parser.add_argument('--sp', help='Server reveiving port', default=4455)
     args = parser.parse_args()
     FedAvg(args.cl, str(args.ci), int(args.cp), str(args.si), int(args.sp)) 
