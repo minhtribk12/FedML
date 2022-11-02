@@ -22,6 +22,11 @@ def send(file_path, file_name, ip, port):
         file = open(file_path + file_name, "rb")
         data = file.read()
 
+        ### ENCODE DATA ###
+        # To do
+
+        
+
         """ Sending the filename to the server. """
         client.send(file_name.encode(FORMAT))
         msg = client.recv(SIZE).decode(FORMAT)
