@@ -1,6 +1,7 @@
 
 import socket, time
 import pandas as pd
+from QCLDPC.QCLDPC import Encode, Decode
 
 # IP = socket.gethostbyname(socket.gethostname())
 # PORT = 4455
@@ -22,10 +23,14 @@ def send(file_path, file_name, ip, port):
         file = open(file_path + file_name, "rb")
         data = file.read()
 
+        int_data = int.from_bytes(data, signed=False)
+
         ### ENCODE DATA ###
         # To do
+        int_data = Encode(int_data)
+        byte_data = int_data.to_bytes(int_data.bit_length(), signed=False)
 
-        
+
 
         """ Sending the filename to the server. """
         client.send(file_name.encode(FORMAT))
@@ -34,7 +39,7 @@ def send(file_path, file_name, ip, port):
 
         """ Sending the file data to the server. """
 
-        client.send(data)
+        client.send(byte_data)
         # client.send(data.encode(FORMAT))
         msg = client.recv(SIZE).decode(FORMAT)
         print(f"[SERVER]: {msg}")
@@ -82,9 +87,16 @@ def client_receive(file_path, recv_socket, file_name):
 
         """ Receiving the file data from the client. """
         data = conn.recv(SIZE)
+
+        ### Decode ####
+        int_data = int.from_bytes(data, signed=False)
+        int_data = Decode (int_data)
+        byte_data = int_data.to_bytes(int_data.bit_length(), signed=False)
+
+
         # data = conn.recv(SIZE).decode(FORMAT)
         print(f"[RECV] Receiving the file data.")
-        file.write(data)
+        file.write(byte_data)
         conn.send("File data received".encode(FORMAT))
 
         """ Closing the file. """
@@ -112,9 +124,15 @@ def server_receive(file_path, recv_socket, num_client):
 
         """ Receiving the file data from the client. """
         data = conn.recv(SIZE)
+
+        ### Decode ####
+        int_data = int.from_bytes(data, signed=False)
+        int_data = Decode (int_data)
+        byte_data = int_data.to_bytes(int_data.bit_length(), signed=False)
+
         # data = conn.recv(SIZE).decode(FORMAT)
         print(f"[RECV] Receiving the file data.")
-        file.write(data)
+        file.write(byte_data)
         conn.send("File data received".encode(FORMAT))
 
         """ Closing the file. """
