@@ -1,6 +1,6 @@
 import numpy as np
 
-def zeros(n):
+def zero(n):
     if isinstance(n,int):
         sh = (n,n)
         return np.zeros(sh)

@@ -1,20 +1,20 @@
 import numpy as np
-from util import zeros
+from util import zero
 
 def QCEncode(InputB,qcH,Hb):
     mb,nb = Hb.shape
     rqc,cqc = qcH.shape
     kb = nb-mb
     z = cqc/nb
-    CheckB = zeros(mb*z,1)
-    ZhInverse = zeros(z)
+    CheckB = np.zeros(mb*z,1)
+    ZhInverse = np.zeros(z)
     ZhInverse = qcH[0:z-1,z*kb:z*kb+z-1] + qcH[z*5:z*5+z-1,z*kb:z*kb+z-1] + qcH[z*(mb-1):z*mb-1,z*kb:z*kb+z-1]
     ZhInverse = np.mod(ZhInverse,2)
 
-    ZSum=zeros(z,1)
+    ZSum=np.zeros(z,1)
     for j in range(kb):
-        ZMid = zeros(z,1)
-        ZHb = zeros(z)
+        ZMid = np.zeros(z,1)
+        ZHb = np.zeros(z)
         for i in range(mb):
             if Hb[i,j] >= 0:
                 ZHb = qcH[z*i:z*(i+1)-1,z*j:z*(j+1)-1]
@@ -22,7 +22,7 @@ def QCEncode(InputB,qcH,Hb):
         ZSum=ZMid+ZSum
     ZSum=np.mod(ZSum,2)
     CheckB[0:z,0]=np.mod(ZhInverse*ZSum,2)
-    ZSum2=zeros(z,1)
+    ZSum2=np.zeros(z,1)
 
     for k in range(kb):
         if Hb[0,k] >= 0:
@@ -31,7 +31,7 @@ def QCEncode(InputB,qcH,Hb):
     CheckB[z:2*z-1,0] = np.mod(ZSum2+qcH[0:z-1,z*kb:z*(kb+1)-1]*CheckB[0:z-1,0],2)
 
     for m in range(2,mb):
-        ZSumR=zeros(z,1)
+        ZSumR=np.zeros(z,1)
         if m != 6:
             for k in range(kb):
                 if Hb(m-1,k) >= 0:

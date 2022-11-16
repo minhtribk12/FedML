@@ -1,12 +1,13 @@
 import numpy as np
-from util import zeros
+from util import zero
 
 def QCLDPCBaseH(Nbit,Rate):
     nb = 24
-    z = Nbit/nb
-    mb = nb-nb*Rate
-    kb = nb-mb            
-    Hz = zeros(z) 
+    z = int(Nbit/nb)
+    mb = int(nb-nb*Rate)
+    #kb = nb-mb            
+    Hz = np.zeros((z,z)) 
+    SubH = np.zeros((z,z))
     Hb = np.array([
         [-1, 94, 73, -1, -1, -1, -1, -1, 55, 83, -1, -1, 7, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
         [-1, 27, -1, -1, -1, 22, 79, 9, -1, -1, -1, 12, -1, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -21,23 +22,26 @@ def QCLDPCBaseH(Nbit,Rate):
         [-1, -1, 7, 65, -1, -1, -1, -1, 39, 49, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0],
         [43, -1, -1, -1, -1, 66, -1, 41, -1, -1, -1, 26, 7, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0]
     ])
-    HbNew=zeros(Hb.shape)
+    HbNew=np.zeros(Hb.shape)
 
     for i in range(mb):
         for j in range(nb):
             if Hb[i,j] < 0:
-                Hz = zeros(z)
+                Hz = np.zeros((z,z))
             elif Hb[i,j] == 0:
                 Hz = np.identity(z)
             else:
                 HbNew[i,j]= np.floor(Hb[i,j]*z/96)
-                Hz = np.roll(np.identity(z), (0,HbNew[i,j]), axis=(0,1))
-            if j == 1:
+                #Hz = np.roll(np.identity(z), (0,int(HbNew[i,j])), axis=(0,1))
+                Hz = np.roll(np.identity(z), int(HbNew[i,j]), axis=1)
+                
+            if j == 0:
                 SubH = Hz
             else:
+                #SubH = np.concatenate((SubH,Hz),axis = 1)
                 SubH = np.concatenate((SubH,Hz),axis = 1)
         
-        if i == 1:
+        if i == 0:
             qcH=SubH
         else:
             qcH = np.concatenate((qcH,SubH), axis = 0)

@@ -4,20 +4,20 @@ import matplotlib.pyplot as plt
 from math import pi
 import numpy as np
 import matplotlib.pyplot as plt
-from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.layers import Input, Convolution2D, ZeroPadding2D, MaxPooling2D, Flatten, Dense, Dropout, Activation
+from keras.models import Model, Sequential
+from keras.layers import Input, Convolution2D, ZeroPadding2D, MaxPooling2D, Flatten, Dense, Dropout, Activation
 from PIL import Image
 import numpy as np
 #from tensorflow.keras.applications.imagenet_utils import preprocess_input
-from tensorflow.keras.preprocessing import image
+from keras.preprocessing import image
 import matplotlib.pyplot as plt
 from os import walk
 import pandas as pd
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import LSTM,Dropout,BatchNormalization,Masking,Embedding
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers import LSTM,Dropout,BatchNormalization,Masking,Embedding
 from numpy import array
-from tensorflow.keras.models import load_model
+from keras.models import load_model
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
 from matplotlib import pyplot
@@ -52,32 +52,32 @@ import copy
 from PIL import Image
 import glob
 import numpy as np
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.utils import to_categorical
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.utils import to_categorical
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn import datasets, metrics
 from sklearn.metrics import accuracy_score
 import random
-from tensorflow.keras import regularizers
-from sklearn.preprocessing.data import StandardScaler
+from keras import regularizers
+from sklearn.preprocessing._data import StandardScaler
 import tensorflow as tf
 from sklearn.utils import shuffle
 from sklearn.metrics import classification_report
 import pandas as pd 
 from sklearn.utils import shuffle
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.utils import to_categorical
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.utils import to_categorical
 from sklearn.preprocessing import scale
 from tqdm import tqdm    
 import copy
 import torch
 from torch import nn
-from tensorflow.keras import backend
-from tensorflow.keras.optimizers import SGD
+from keras import backend
+from keras.optimizers import SGD
 
 comms_round=5
 client_names=['1']
@@ -229,7 +229,7 @@ def get_weights(c_id,g_w,comm_r,tr):
     y0 = to_categorical(y0)
 
     n_cols = X0.shape[1]
-    from tensorflow.keras.layers import BatchNormalization
+    from keras.layers import BatchNormalization
     model = Sequential()
     
     model.add(Dense(30, input_dim=n_cols, activation='relu'))

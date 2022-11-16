@@ -1,9 +1,9 @@
-from tensorflow.keras.models import  model_from_json
+from keras.models import  model_from_json
 import pandas as pd
 import tensorflow as tf
 import argparse
 import time
-from tensorflow.keras.utils import to_categorical
+from keras.utils import to_categorical
 import tensorflow as tf
 from sklearn.utils import shuffle  
 from communicate import send, client_receive, open_socket,load_weight_from_file,write_weight_to_file,select_sub

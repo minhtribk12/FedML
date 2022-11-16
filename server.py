@@ -2,9 +2,9 @@ import pandas as pd
 import tensorflow as tf
 import numpy as np
 import time, json, argparse
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.utils import to_categorical
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.utils import to_categorical
 import tensorflow as tf  
 from sklearn.utils import shuffle 
 from communicate import send, server_receive, open_socket,load_weight_from_file,write_weight_to_file

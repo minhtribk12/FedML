@@ -1,6 +1,6 @@
 from tabnanny import check
 import numpy as np
-from util import zeros
+from util import zero
 import math
 
 def LDPCDecode(Sign,row,col,block,H,sigma,IterNum):
@@ -10,22 +10,19 @@ def LDPCDecode(Sign,row,col,block,H,sigma,IterNum):
     LLRsigma=sigma
     IterNumLen=len(IterNum)
 
-
-    ErrDecode=zeros(1,IterNumLen)
-
     # channel initial LLR value
-    LLRInitial=zeros(1,cols)
+    LLRInitial=np.zeros(1,cols)
     for i in range(cols):
         LLRInitial[0,i]=2*Sign[0,i]/(LLRsigma^2)
-    LLRQ=zeros(rows,cols);  
-    LLRR=zeros(rows,cols);  
+    LLRQ=np.zeros(rows,cols);  
+    LLRR=np.zeros(rows,cols);  
     for i in range(rows):
         for j in range(cols):
             if H[i,j] != 0:
                 LLRQ[i,j] = LLRInitial(0,j)
     
 
-    Outputdecode=zeros(1,cols)
+    Outputdecode=np.zeros(1,cols)
 
     for iter in range(IterNumLen):
         for i in range(rows):
@@ -50,7 +47,7 @@ def LDPCDecode(Sign,row,col,block,H,sigma,IterNum):
                             LLRMid = LLRR[k,i]+LLRMid
                     LLRQ[j,i] = LLRMid + LLRInitial[0,i]
 
-        LQ = zeros(1,cols)
+        LQ = np.zeros(1,cols)
 
         for i in range(cols):
             LQMid = 0 
@@ -58,7 +55,7 @@ def LDPCDecode(Sign,row,col,block,H,sigma,IterNum):
                 LQMid = LLRR[j,i] + LQMid
             LQ[0,i] = LQMid + LLRInitial[0,i]
 
-        decode=zeros(1,cols)
+        decode=np.zeros(1,cols)
         for i in range(cols):
             if LQ(0,i) < 0:
                 decode[0,i] = 1

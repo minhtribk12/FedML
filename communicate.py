@@ -1,7 +1,7 @@
-
+import sys,os
 import socket, time
 import pandas as pd
-from QCLDPC.QCLDPC import Encode, Decode
+from QCLDPC import Encode, Decode
 
 # IP = socket.gethostbyname(socket.gethostname())
 # PORT = 4455
